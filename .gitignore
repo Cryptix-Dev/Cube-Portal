@@ -17,6 +17,7 @@ proguard/
 
 # Eclipse Gradle
 .settings
+.settings/*
 
 # Log Files
 *.log
