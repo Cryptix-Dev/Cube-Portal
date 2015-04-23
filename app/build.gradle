@@ -168,6 +168,14 @@ task copyEclipseClasspath << {
     }
 }
 
+task refreshBuild << {
+	Properties props = new Properties()
+	def propsFile = new File("${projectDir}/project.properties")
+	props.load(propsFile.newDataInputStream())
+	props.setProperty("target", "android-${appTargetSDK}")
+	props.store(propsFile.newWriter(), null)
+}
+
 task cleanEclipseGradle << {
 	def binsDir = new File("${projectDir}/bin")
 	def depsDir = new File("${projectDir}/deps")
