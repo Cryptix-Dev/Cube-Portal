@@ -1,22 +1,23 @@
-apply from: '../Variables.gradle'
+apply from: '../variables.gradle'
 
-// TODO: Add android-sdk-manager
 // TODO: Add android-command-plugin
+apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'eclipse'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
 }
 
 android {
-    compileSdkVersion targetSDK
-    buildToolsVersion buildTools
+    compileSdkVersion appTargetSDK
+    buildToolsVersion appBuildTools
 
     defaultConfig {
-        applicationId 'com.cryptix.cube_portal'
-        minSdkVersion minSDK
-        targetSdkVersion targetSDK
+        applicationId appPackage
+        minSdkVersion appMinSDK
+        targetSdkVersion appTargetSDK
         versionCode 1
         versionName "1.0"
     }
@@ -57,15 +58,15 @@ eclipse.ext {
 
 eclipse.classpath.file {
 	withXml {
-		eclipse.genDir.mkdir()
-		eclipse.assetsDir.mkdir()
-		eclipse.resDir.mkdir()
-		eclipse.srcDir.mkdir()
+		eclipse.genDir.mkdirs()
+		eclipse.assetsDir.mkdirs()
+		eclipse.resDir.mkdirs()
+		eclipse.srcDir.mkdirs()
 		
 		def props = new Properties()
 		def writer = new FileWriter(file('project.properties'))
 		try {
-			props.setProperty("target", "android-${targetSDK}")
+			props.setProperty("target", "android-${appTargetSDK}")
 			props.store(writer, null)
 			writer.flush()
 		} finally {
@@ -120,6 +121,7 @@ task copyAars << {
 		props.store(propsFile.newWriter(), null)
 	}
 }
+copyAars.dependsOn tasks.eclipse
 
 void copyAndRenameAar(File file) {
     println 'Added aar ' + file

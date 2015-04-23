@@ -1,8 +1,10 @@
 // Project Name for eclipse project explorer
-ext.projectName = 'Cube Portal'
+ext.projectName = "Cube Portal"
 
 // Android Settings
-ext.package = "com.mycompany.myapp"
-ext.minSDK = 8
-ext.targetSDK = 21
-ext.buildTools = "21.1.2"
+
+// App sub-project variables
+ext.appPackage = "com.cryptix.cube_portal"
+ext.appMinSDK = 8
+ext.appTargetSDK = 22
+ext.appBuildTools = "22.0.0"
