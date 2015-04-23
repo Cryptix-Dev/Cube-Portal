@@ -36,6 +36,8 @@ gen/
 # Windows thumbnail db
 Thumbs.db
 
-# Eclipse project files
-.classpath
+# Eclipse
 .project
+.classpath
+deps/
+project.properties
