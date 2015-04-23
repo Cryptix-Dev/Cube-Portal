@@ -4,9 +4,10 @@ android:
     components:
         - build-tools-22.0.0
         - android-22
-        - android-15
-        - android-8
 
 jdk:
     - oraclejdk7
     - oraclejdk8
+    
+before_install:
+    - chmod +x gradlew
