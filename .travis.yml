@@ -7,7 +7,7 @@ android:
 
 script:
     - ./gradlew clean check -Dpre-dex=false
-	
+
 jdk:
     - oraclejdk7
     - oraclejdk8
