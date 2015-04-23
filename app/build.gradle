@@ -10,6 +10,9 @@ dependencies {
     //compile 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
 }
 
+def isTravis = "true".equals(System.getenv("TRAVIS"))
+def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+
 def getVersionCode = { ->
     try {
         def code = new ByteArrayOutputStream()
@@ -67,6 +70,10 @@ android {
         release.setRoot('build-types/release')
     }
     
+    dexOptions {
+    	preDexLibraries = preDexEnabled && !isTravis
+    }
+    
 	// TODO: Create more buildTypes
     buildTypes {
         release {
@@ -94,6 +101,7 @@ eclipse.classpath.file {
 		def writer = new FileWriter(file('project.properties'))
 		try {
 			props.setProperty("target", "android-${appTargetSDK}")
+			props.setProperty("sdk.buildtools", "${appBuildTools}")
 			props.store(writer, null)
 			writer.flush()
 		} finally {
@@ -200,6 +208,7 @@ task refreshBuild << {
 	def propsFile = new File("${projectDir}/project.properties")
 	props.load(propsFile.newDataInputStream())
 	props.setProperty("target", "android-${appTargetSDK}")
+	props.setProperty("sdk.buildtools", "${appBuildTools}")
 	props.store(propsFile.newWriter(), null)
 }
 
