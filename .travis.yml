@@ -1,13 +1,13 @@
 language: android
 
 android:
-	components:
-		- build-tools-22.0.0
-		- android-22
+    components:
+        - build-tools-22.0.0
+        - android-22
 
 script:
-	- ./gradlew clean check -Dpre-dex=false
+    - ./gradlew clean check -Dpre-dex=false
 	
 jdk:
-	- oraclejdk7
-	- oraclejdk8
+    - oraclejdk7
+    - oraclejdk8
