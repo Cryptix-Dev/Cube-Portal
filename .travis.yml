@@ -1,13 +1,23 @@
-language: android
+env:
+    matrix:
+    - ANDROID_SDK=android-22 ANDROID_ABI=armeabi-v7a SYS_IMG=sys-img-armeabi-v7a-android-22
+    - ANDROID_SDK=android-15 ANDROID_ABI=armeabi-v7a SYS_IMG=sys-img-armeabi-v7a-android-15
+    - ANDROID_SDK=android-8 ANDROID_ABI=armeabi      SYS_IMG=sys-img-armeabi-android-8
 
+language: android
 android:
     components:
         - build-tools-22.0.0
         - android-22
+        - $SYS_IMG
 
-jdk:
-    - oraclejdk7
-    - oraclejdk8
+jdk: oraclejdk8
     
 before_install:
     - chmod +x gradlew
+    
+before_script:
+  - echo no | android create avd --force -n test -t $ANDROID_SDK --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
