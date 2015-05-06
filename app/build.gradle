@@ -62,7 +62,7 @@ android {
     		aidl.srcDirs = ['src/main/java']
             renderscript.srcDirs = ['src/main/java']
             res.srcDirs = ['res']
-            assets.srcDirs = ['src/main/assets']
+            assets.srcDirs = ['assets']
     	}
     	
     	androidTest.setRoot('tests')
@@ -85,7 +85,7 @@ android {
 
 eclipse.ext {
 	genDir = new File("${projectDir}/gen")
-	assetsDir = new File("${projectDir}/src/main/assets")
+	assetsDir = new File("${projectDir}/assets")
 	resDir = new File("${projectDir}/res")
 	srcDir = new File("${projectDir}/src/main/java")
 }
@@ -112,7 +112,7 @@ eclipse.classpath.file {
 		node.appendNode('classpathentry kind="src" path="src/main/java"')
 		node.appendNode('classpathentry kind="src" path="gen"')
 		node.appendNode('classpathentry kind="src" path="res"')
-		node.appendNode('classpathentry kind="src" path="src/main/assets"')
+		node.appendNode('classpathentry kind="src" path="assets"')
 		
 		node.children().removeAll() { c ->
 			def path = c.attribute('path')
