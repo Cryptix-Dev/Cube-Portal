@@ -1,6 +1,8 @@
 package com.cryptix.cube_portal;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 
 public class MainGLSurfaceView extends GLSurfaceView {
@@ -9,14 +11,16 @@ public class MainGLSurfaceView extends GLSurfaceView {
 	
 	public MainGLSurfaceView(Context context) {
 		super(context);
-		
-		setEGLContextClientVersion(2);
-		
 		glRenderer = new GLRenderer();
 		
-		setRenderer(glRenderer);
+		final ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+		final boolean supportsES2 = configurationInfo.reqGlEsVersion >= 0x20000;
 		
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		if (supportsES2) {
+			setEGLContextClientVersion(2);
+			
+			setRenderer(glRenderer);
+		}
 	}
-
 }
