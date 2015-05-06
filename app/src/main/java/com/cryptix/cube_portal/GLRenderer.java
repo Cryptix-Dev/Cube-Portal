@@ -3,14 +3,17 @@ package com.cryptix.cube_portal;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.cryptix.cube_portal.shaders.Shaders;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 public class GLRenderer implements GLSurfaceView.Renderer {
+	public final static Shaders shaders = new Shaders();
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		shaders.loadShaders();
 	}
 
 	@Override
