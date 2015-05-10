@@ -13,7 +13,6 @@ import com.cryptix.cube_portal.shaders.Shaders;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 
 public class GLRenderer implements GLSurfaceView.Renderer {
 	
@@ -44,6 +43,9 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 	private final int positionDataSize = 3;
 	private final int colorOffset = 3;
 	private final int colorDataSize = 4;
+	
+	private GameTime drawTime;
+	private float interpolation;
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -89,6 +91,16 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 		Matrix.frustumM(projectionMatrix, 0, left, right, bottom, top, near, far);
 	}
 
+	public void update(GameTime gameTime) {
+		// TODO: Add frame counter.
+		// TODO: Migrate triangle movement
+	}
+	
+	public void prepareDraw(GameTime gameTime, float interpolation) {
+		this.interpolation = interpolation;
+		drawTime = gameTime;
+	}
+	
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		// Draw Method
