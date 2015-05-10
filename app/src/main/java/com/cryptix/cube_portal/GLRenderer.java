@@ -108,7 +108,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 		
 		GLES20.glUseProgram(programs.basicProgram.getHandle());
 		
-		long time = SystemClock.uptimeMillis() % 10000L;
+		long time = drawTime.TotalGameTime().getMilliseconds() % 10000L;
 		float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
 		
 		Matrix.setIdentityM(modelMatrix, 0);
