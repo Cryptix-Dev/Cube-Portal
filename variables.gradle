@@ -5,6 +5,6 @@ ext.projectName = "Cube Portal"
 
 // App sub-project variables
 ext.appPackage = "com.cryptix.cube_portal"
-ext.appMinSDK = 8
+ext.appMinSDK = 9
 ext.appTargetSDK = 22
 ext.appBuildTools = "22.0.0"
