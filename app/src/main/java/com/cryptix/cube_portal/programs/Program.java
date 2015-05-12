@@ -12,6 +12,8 @@ public abstract class Program {
 	
 	private int handle = 0;
 	private List<ProgramVariable> variables;
+	private Shader vertexShader = null;
+	private Shader fragmentShader = null;
 	
 	public Program() {
 		variables = new ArrayList<ProgramVariable>();
@@ -30,10 +32,34 @@ public abstract class Program {
 		
 		if (handle != 0) {
 			
-			if (getVertexShader().getHandle() != 0)
-				GLES20.glAttachShader(handle, getVertexShader().getHandle());
-			if (getFragmentShader().getHandle() != 0)
-				GLES20.glAttachShader(handle, getFragmentShader().getHandle());
+			for(Shader s : Shader.loadedShaders) {
+				if (s.shaderName().equalsIgnoreCase(getVertexShader()))
+					vertexShader = s;
+				if (s.shaderName().equalsIgnoreCase(getFragmentShader()))
+					fragmentShader = s;
+			}
+			
+			if (vertexShader == null) {
+				try {
+					vertexShader = (Shader) Shader.shaderNameToClassMap.get(getVertexShader()).newInstance();
+				} catch (Exception e) {
+					throw new RuntimeException("Failed to find VertexShader: " + getVertexShader());
+				}
+				vertexShader.loadShader();
+			}
+			if (fragmentShader == null) {
+				try {
+					fragmentShader = (Shader) Shader.shaderNameToClassMap.get(getFragmentShader()).newInstance();
+				} catch (Exception e) {
+					throw new RuntimeException("Failed to find FragmentShader: " + getFragmentShader());
+				}
+				fragmentShader.loadShader();
+			}
+			
+			if (vertexShader.getHandle() != 0)
+				GLES20.glAttachShader(handle, vertexShader.getHandle());
+			if (fragmentShader.getHandle() != 0)
+				GLES20.glAttachShader(handle, fragmentShader.getHandle());
 			
 			int i = 0;
 			for (ProgramVariable variable : variables) {
@@ -70,6 +96,6 @@ public abstract class Program {
 		handle = 0;
 	}
 	
-	public abstract Shader getVertexShader();
-	public abstract Shader getFragmentShader();
+	public abstract String getVertexShader();
+	public abstract String getFragmentShader();
 }

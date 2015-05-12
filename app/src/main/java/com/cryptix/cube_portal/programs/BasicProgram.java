@@ -1,8 +1,6 @@
 package com.cryptix.cube_portal.programs;
 
-import com.cryptix.cube_portal.GLRenderer;
 import com.cryptix.cube_portal.programs.ProgramVariable.VariableType;
-import com.cryptix.cube_portal.shaders.Shader;
 
 public class BasicProgram extends Program {
 	
@@ -23,13 +21,13 @@ public class BasicProgram extends Program {
 	}
 	
 	@Override
-	public Shader getVertexShader() {
-		return GLRenderer.shaders.basicVertexShader;
+	public String getVertexShader() {
+		return "BasicVertexShader";
 	}
 
 	@Override
-	public Shader getFragmentShader() {
-		return GLRenderer.shaders.basicFragmentShader;
+	public String getFragmentShader() {
+		return "BasicFragmentShader";
 	}
 
 }
