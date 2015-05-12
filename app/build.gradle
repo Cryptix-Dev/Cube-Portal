@@ -74,6 +74,11 @@ android {
     	preDexLibraries = preDexEnabled && !isTravis
     }
     
+    compileOptions {
+    	sourceCompatibility JavaVersion.VERSION_1_7
+    	targetCompatibility JavaVersion.VERSION_1_7
+    }
+    
 	// TODO: Create more buildTypes
     buildTypes {
         release {
