@@ -7,8 +7,8 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.cryptix.cube_portal.programs.Programs;
-import com.cryptix.cube_portal.shaders.Shaders;
+import com.cryptix.cube_portal.programs.BasicProgram;
+
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -16,9 +16,8 @@ import android.opengl.Matrix;
 
 public class GLRenderer implements GLSurfaceView.Renderer {
 	
-	// TODO: Better method of storing shaders and programs globally.
-	public final static Shaders shaders = new Shaders();
-	public final static Programs programs = new Programs();
+	// TODO: Store programs globally.
+	private BasicProgram basicProgram;
 	
 	private FloatBuffer triangle1Vertices;
 	float[] triangle1VerticesData = {
@@ -53,9 +52,9 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 		// Set the ClearColor for rendering
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		// TODO: Cleaner shader loading?
-		shaders.loadShaders();
-		programs.createPrograms();
+		// TODO: Cleaner program creation.
+		basicProgram = new BasicProgram();
+		basicProgram.createProgram();
 		
 		final float eyeX = 0.0f;
 		final float eyeY = 0.0f;
@@ -106,7 +105,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 		// Draw Method
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 		
-		GLES20.glUseProgram(programs.basicProgram.getHandle());
+		GLES20.glUseProgram(basicProgram.getHandle());
 		
 		long time = drawTime.TotalGameTime().getMilliseconds() % 10000L;
 		float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
@@ -115,19 +114,19 @@ public class GLRenderer implements GLSurfaceView.Renderer {
 		Matrix.rotateM(modelMatrix, 0, angleInDegrees, 0.0f, 0.0f, 1.0f);
 		
 		triangle1Vertices.position(positionOffset);
-		GLES20.glVertexAttribPointer(programs.basicProgram.Position.getHandle(), positionDataSize, GLES20.GL_FLOAT, false, strideBytes, triangle1Vertices);
+		GLES20.glVertexAttribPointer(basicProgram.Position.getHandle(), positionDataSize, GLES20.GL_FLOAT, false, strideBytes, triangle1Vertices);
 		
-		GLES20.glEnableVertexAttribArray(programs.basicProgram.Position.getHandle());
+		GLES20.glEnableVertexAttribArray(basicProgram.Position.getHandle());
 		
 		triangle1Vertices.position(colorOffset);
-		GLES20.glVertexAttribPointer(programs.basicProgram.Color.getHandle(), colorDataSize, GLES20.GL_FLOAT, false, strideBytes, triangle1Vertices);
+		GLES20.glVertexAttribPointer(basicProgram.Color.getHandle(), colorDataSize, GLES20.GL_FLOAT, false, strideBytes, triangle1Vertices);
 		
-		GLES20.glEnableVertexAttribArray(programs.basicProgram.Color.getHandle());
+		GLES20.glEnableVertexAttribArray(basicProgram.Color.getHandle());
 		
 		Matrix.multiplyMM(modelViewProjMatrix, 0, viewMatrix, 0, modelMatrix, 0);
 		Matrix.multiplyMM(modelViewProjMatrix, 0, projectionMatrix, 0, modelViewProjMatrix, 0);
 		
-		GLES20.glUniformMatrix4fv(programs.basicProgram.ModelViewPositionMatrix.getHandle(), 1, false, modelViewProjMatrix, 0);
+		GLES20.glUniformMatrix4fv(basicProgram.ModelViewPositionMatrix.getHandle(), 1, false, modelViewProjMatrix, 0);
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
 	}
 }
