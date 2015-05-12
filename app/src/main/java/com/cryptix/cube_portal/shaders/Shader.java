@@ -7,16 +7,30 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import com.cryptix.cube_portal.Main;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import android.opengl.GLES20;
 import android.util.Log;
+
+import com.cryptix.cube_portal.Main;
 
 public abstract class Shader {
 	public enum ShaderType {
 		VERTEX_SHADER,
 		FRAGMENT_SHADER;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static Map<String, Class> shaderNameToClassMap = new HashMap<String, Class>();
+	public static Set<Shader> loadedShaders = new HashSet<Shader>();
+	
+	static {
+		/** Add all Shader classes to use. */
+		addToClassMapping("BasicVertexShader", BasicVertexShader.class);
+		addToClassMapping("BasicFragmentShader", BasicFragmentShader.class);
 	}
 	
 	private int handle = 0;
@@ -51,11 +65,19 @@ public abstract class Shader {
 		
 		if (handle == 0)
 			throw new RuntimeException("Error creating Shader.");
+		
+		loadedShaders.add(this);
 	}
 	
 	public void deleteShader() {
 		GLES20.glDeleteShader(handle);
 		handle = 0;
+		loadedShaders.remove(this);
+	}
+	
+	public static void deleteAllShaders() {
+		for (Shader s : loadedShaders)
+			s.deleteShader();
 	}
 
 	public int getHandle() {
@@ -80,6 +102,15 @@ public abstract class Shader {
 			e.printStackTrace();
 		}
 		return s;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void addToClassMapping(String name, Class shaderClass) {
+		if (shaderNameToClassMap.containsKey(name)) {
+			throw new IllegalArgumentException("Duplicate shader class: " + name);
+		} else {
+			shaderNameToClassMap.put(name, shaderClass);
+		}
 	}
 	
 	protected String getShaderCode(InputStream shaderStream) {
@@ -109,5 +140,6 @@ public abstract class Shader {
 	
 	public abstract ShaderType getShaderType();
 	public abstract String shaderLocation();
+	public abstract String shaderName();
 }
 
