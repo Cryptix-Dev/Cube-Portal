@@ -11,4 +11,9 @@ public class BasicFragmentShader extends Shader {
 	public String shaderLocation() {
 		return "shaders/BasicShader.ps";
 	}
+
+	@Override
+	public String shaderName() {
+		return "BasicFragmentShader";
+	}
 }

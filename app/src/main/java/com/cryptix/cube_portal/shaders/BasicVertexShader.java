@@ -11,4 +11,9 @@ public class BasicVertexShader extends Shader {
 	public String shaderLocation() {
 		return "shaders/BasicShader.vs";
 	}
+
+	@Override
+	public String shaderName() {
+		return "BasicVertexShader";
+	}
 }
