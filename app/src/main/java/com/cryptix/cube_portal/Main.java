@@ -7,8 +7,10 @@ import android.os.Bundle;
 
 public class Main extends Activity {
 
-    private GLSurfaceView  mainGLSurfaceView;
-    private static Context context;
+    private GLSurfaceView      mainGLSurfaceView;
+    private static Context     context;
+
+    public final static String applicationName = "Cube Portal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
