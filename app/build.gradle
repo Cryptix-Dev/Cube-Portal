@@ -1,13 +1,18 @@
 apply from: '../variables.gradle'
 
-// TODO: Add android-command-plugin
-//apply plugin: 'android-sdk-manager'
 apply plugin: 'com.android.application'
 apply plugin: 'eclipse'
 
+// project Variables
+def Package = "com.cryptix.cube_portal"
+def MinSDK  = 9
+def TargetSDK = 22
+def BuildTools = "22.0.1"
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
+    // Add Dependencies here.
+    
 }
 
 def isTravis = "true".equals(System.getenv("TRAVIS"))
@@ -41,13 +46,13 @@ def getVersionName = { ->
 }
 
 android {
-    compileSdkVersion appTargetSDK
-    buildToolsVersion appBuildTools
+    compileSdkVersion TargetSDK
+    buildToolsVersion BuildTools
 
     defaultConfig {
-        applicationId appPackage
-        minSdkVersion appMinSDK
-        targetSdkVersion appTargetSDK
+        applicationId Package
+        minSdkVersion MinSDK
+        targetSdkVersion TargetSDK
         versionCode getVersionCode()
         versionName getVersionName()
     }
@@ -105,8 +110,8 @@ eclipse.classpath.file {
 		def props = new Properties()
 		def writer = new FileWriter(file('project.properties'))
 		try {
-			props.setProperty("target", "android-${appTargetSDK}")
-			props.setProperty("sdk.buildtools", "${appBuildTools}")
+			props.setProperty("target", "android-${TargetSDK}")
+			props.setProperty("sdk.buildtools", "${BuildTools}")
 			props.store(writer, null)
 			writer.flush()
 		} finally {
@@ -132,8 +137,11 @@ eclipse.classpath.file {
 			c.kind == 'src'
 		}
 	}
-	
+}
 
+eclipse.jdt {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 }
 
 eclipse.project {
@@ -161,7 +169,6 @@ task copyAars << {
 		props.store(propsFile.newWriter(), null)
 	}
 }
-copyAars.dependsOn tasks.eclipse
 
 void copyAndRenameAar(File file) {
     println 'Added aar ' + file
@@ -212,8 +219,8 @@ task refreshBuild << {
 	Properties props = new Properties()
 	def propsFile = new File("${projectDir}/project.properties")
 	props.load(propsFile.newDataInputStream())
-	props.setProperty("target", "android-${appTargetSDK}")
-	props.setProperty("sdk.buildtools", "${appBuildTools}")
+	props.setProperty("target", "android-${TargetSDK}")
+	props.setProperty("sdk.buildtools", "${BuildTools}")
 	props.store(propsFile.newWriter(), null)
 }
 
@@ -227,4 +234,8 @@ task cleanEclipseGradle << {
 	genDir.deleteDir()
 	projectProps.delete()
 }
+
+task genEclipse(dependsOn: ['eclipse', 'copyAars', 'copyEclipseClasspath'])
+copyAars.mustRunAfter tasks.eclipse
+copyEclipseClasspath.mustRunAfter copyAars
 cleanEclipse.dependsOn cleanEclipseGradle
