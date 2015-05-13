@@ -9,15 +9,9 @@ public class BasicProgram extends Program {
     public ProgramVariable Position;
 
     public BasicProgram() {
-        super();
-
-        Color = new ProgramVariable(VariableType.TYPE_ATTRIBUTE, "a_Color");
-        Position = new ProgramVariable(VariableType.TYPE_ATTRIBUTE, "a_Position");
-        ModelViewPositionMatrix = new ProgramVariable(VariableType.TYPE_UNIFORM, "u_MVPMatrix");
-
-        addVariable(Color);
-        addVariable(Position);
-        addVariable(ModelViewPositionMatrix);
+        Color = addVariable(VariableType.TYPE_ATTRIBUTE, "a_Color");
+        Position = addVariable(VariableType.TYPE_ATTRIBUTE, "a_Position");
+        ModelViewPositionMatrix = addVariable(VariableType.TYPE_UNIFORM, "u_MVPMatrix");
     }
 
     @Override
@@ -29,5 +23,4 @@ public class BasicProgram extends Program {
     public String getFragmentShader() {
         return "BasicFragmentShader";
     }
-
 }

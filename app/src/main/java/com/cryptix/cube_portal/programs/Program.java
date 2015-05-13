@@ -11,13 +11,9 @@ import com.cryptix.cube_portal.shaders.Shader;
 public abstract class Program {
 
     private int                   handle         = 0;
-    private List<ProgramVariable> variables;
+    private List<ProgramVariable> variables      = new ArrayList<ProgramVariable>();
     private Shader                vertexShader   = null;
     private Shader                fragmentShader = null;
-
-    public Program() {
-        variables = new ArrayList<ProgramVariable>();
-    }
 
     public int getHandle() {
         return handle;
@@ -25,6 +21,12 @@ public abstract class Program {
 
     public void addVariable(ProgramVariable variable) {
         variables.add(variable);
+    }
+
+    public ProgramVariable addVariable(VariableType type, String name) {
+        ProgramVariable temp = new ProgramVariable(type, name);
+        variables.add(temp);
+        return temp;
     }
 
     public void createProgram() {
