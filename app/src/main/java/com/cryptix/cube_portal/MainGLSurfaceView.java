@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
-import android.util.Log;
 
 public class MainGLSurfaceView extends GLSurfaceView {
 
