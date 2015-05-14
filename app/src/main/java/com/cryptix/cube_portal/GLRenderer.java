@@ -46,7 +46,6 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         // Set the ClearColor for rendering
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // TODO: Cleaner program creation.
         basicProgram = new BasicProgram();
         basicProgram.createProgram();
 
@@ -86,7 +85,6 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void update(GameTime gameTime) {
-        // TODO: Add frame counter.
         // TODO: Migrate triangle movement
     }
 
