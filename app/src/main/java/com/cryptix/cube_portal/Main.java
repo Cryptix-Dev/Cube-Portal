@@ -5,15 +5,17 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
-public class Main extends Activity {
+public class Main extends Activity
+{
 
-    private GLSurfaceView      mainGLSurfaceView;
-    private static Context     context;
+    private GLSurfaceView mainGLSurfaceView;
+    private static Context context;
 
     public final static String applicationName = "Cube Portal";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         mainGLSurfaceView = new MainGLSurfaceView(this);
@@ -23,18 +25,21 @@ public class Main extends Activity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mainGLSurfaceView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mainGLSurfaceView.onPause();
     }
 
-    public static Context getAppContext() {
+    public static Context getAppContext()
+    {
         return Main.context;
     }
 }

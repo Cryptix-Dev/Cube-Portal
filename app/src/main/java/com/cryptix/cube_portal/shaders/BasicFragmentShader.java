@@ -1,19 +1,23 @@
 package com.cryptix.cube_portal.shaders;
 
-public class BasicFragmentShader extends Shader {
+public class BasicFragmentShader extends Shader
+{
 
     @Override
-    public ShaderType getShaderType() {
+    public ShaderType getShaderType()
+    {
         return ShaderType.FRAGMENT_SHADER;
     }
 
     @Override
-    public String shaderLocation() {
+    public String shaderLocation()
+    {
         return "shaders/BasicShader.ps";
     }
 
     @Override
-    public String shaderName() {
+    public String shaderName()
+    {
         return "BasicFragmentShader";
     }
 }

@@ -1,19 +1,23 @@
 package com.cryptix.cube_portal.shaders;
 
-public class BasicVertexShader extends Shader {
+public class BasicVertexShader extends Shader
+{
 
     @Override
-    public ShaderType getShaderType() {
+    public ShaderType getShaderType()
+    {
         return ShaderType.VERTEX_SHADER;
     }
 
     @Override
-    public String shaderLocation() {
+    public String shaderLocation()
+    {
         return "shaders/BasicShader.vs";
     }
 
     @Override
-    public String shaderName() {
+    public String shaderName()
+    {
         return "BasicVertexShader";
     }
 }

@@ -6,21 +6,26 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 
-public class MainGLSurfaceView extends GLSurfaceView {
+public class MainGLSurfaceView extends GLSurfaceView
+{
 
     private final GLRenderer glRenderer;
-    private final GameLoop   gameLoop;
+    private final GameLoop gameLoop;
 
-    public MainGLSurfaceView(Context context) {
+    public MainGLSurfaceView(Context context)
+    {
         super(context);
         glRenderer = new GLRenderer();
         gameLoop = new GameLoop(glRenderer);
 
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+        final ActivityManager activityManager = (ActivityManager) context
+            .getSystemService(Context.ACTIVITY_SERVICE);
+        final ConfigurationInfo configurationInfo = activityManager
+            .getDeviceConfigurationInfo();
         final boolean supportsES2 = configurationInfo.reqGlEsVersion >= 0x20000;
 
-        if (supportsES2) {
+        if (supportsES2)
+        {
             setEGLContextClientVersion(2);
 
             setRenderer(glRenderer);
@@ -31,38 +36,42 @@ public class MainGLSurfaceView extends GLSurfaceView {
     }
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
         gameLoop.onResume();
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         gameLoop.onPause();
     }
 
-    protected class GameLoop implements Runnable {
+    protected class GameLoop implements Runnable
+    {
 
-        private Thread           t;
+        private Thread t;
         private final GLRenderer renderer;
-        private boolean          isRunning;
+        private boolean isRunning;
 
-        private Object           pauseLock;
-        private boolean          isPaused;
-        private long             pauseMillis     = 0;
+        private Object pauseLock;
+        private boolean isPaused;
+        private long pauseMillis = 0;
 
-        private long             startMillis     = SystemClock.elapsedRealtime();
-        private long             nextGameTick    = startMillis;
+        private long startMillis = SystemClock.elapsedRealtime();
+        private long nextGameTick = startMillis;
 
-        private final int        UPDATE_FPS      = 30;
-        private final int        SKIP_TICKS      = 1000 / UPDATE_FPS;
-        private final int        MAX_FRAMESKIP   = 5;
+        private final int UPDATE_FPS = 30;
+        private final int SKIP_TICKS = 1000 / UPDATE_FPS;
+        private final int MAX_FRAMESKIP = 5;
 
-        private long             oldDrawMillis   = startMillis;
-        private long             oldUpdateMillis = startMillis;
+        private long oldDrawMillis = startMillis;
+        private long oldUpdateMillis = startMillis;
 
-        public GameLoop(GLRenderer renderer) {
+        public GameLoop(GLRenderer renderer)
+        {
             this.renderer = renderer;
             pauseLock = new Object();
             isPaused = false;
@@ -70,7 +79,8 @@ public class MainGLSurfaceView extends GLSurfaceView {
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
 
             int loops;
             float interpolation;
@@ -78,29 +88,42 @@ public class MainGLSurfaceView extends GLSurfaceView {
             long updateMillis = startMillis;
             long drawMillis = startMillis;
 
-            while (isRunning) {
+            while (isRunning)
+            {
 
                 loops = 0;
-                while ((updateMillis = SystemClock.elapsedRealtime()) > nextGameTick && loops < MAX_FRAMESKIP) {
+                while ((updateMillis = SystemClock.elapsedRealtime()) > nextGameTick
+                    && loops < MAX_FRAMESKIP)
+                {
                     nextGameTick += SKIP_TICKS;
-                    renderer.update(new GameTime(new TimeSpan((long) (updateMillis - oldUpdateMillis)), new TimeSpan(
-                            (long) (updateMillis - startMillis)), loops != 0));
+                    renderer.update(new GameTime(new TimeSpan(
+                        (long) (updateMillis - oldUpdateMillis)), new TimeSpan(
+                        (long) (updateMillis - startMillis)), loops != 0));
                     loops++;
                     oldUpdateMillis = updateMillis;
                 }
 
                 drawMillis = SystemClock.elapsedRealtime();
-                interpolation = (float) (drawMillis + SKIP_TICKS - nextGameTick) / (float) SKIP_TICKS;
-                renderer.prepareDraw(new GameTime(new TimeSpan((long) (drawMillis - oldDrawMillis)), new TimeSpan(
-                        (long) (drawMillis - startMillis)), loops != 0), interpolation);
+                interpolation = (float) (drawMillis + SKIP_TICKS - nextGameTick)
+                    / (float) SKIP_TICKS;
+                renderer.prepareDraw(
+                    new GameTime(new TimeSpan(
+                        (long) (drawMillis - oldDrawMillis)), new TimeSpan(
+                        (long) (drawMillis - startMillis)), loops != 0),
+                    interpolation);
                 requestRender();
                 oldDrawMillis = drawMillis;
 
-                synchronized (pauseLock) {
-                    while (isPaused) {
-                        try {
+                synchronized (pauseLock)
+                {
+                    while (isPaused)
+                    {
+                        try
+                        {
                             pauseLock.wait();
-                        } catch (InterruptedException e) {
+                        }
+                        catch (InterruptedException e)
+                        {
                             e.printStackTrace();
                         }
                     }
@@ -108,29 +131,37 @@ public class MainGLSurfaceView extends GLSurfaceView {
             }
         }
 
-        public void start() {
-            if (t == null) {
+        public void start()
+        {
+            if (t == null)
+            {
                 t = new Thread(this, "GameLoop");
                 t.start();
             }
         }
 
-        public void stop() {
+        public void stop()
+        {
             isRunning = false;
         }
 
-        public void onPause() {
-            synchronized (pauseLock) {
+        public void onPause()
+        {
+            synchronized (pauseLock)
+            {
                 isPaused = true;
                 pauseMillis = SystemClock.elapsedRealtime();
             }
         }
 
-        public void onResume() {
-            synchronized (pauseLock) {
+        public void onResume()
+        {
+            synchronized (pauseLock)
+            {
                 isPaused = false;
 
-                if (pauseMillis != 0) {
+                if (pauseMillis != 0)
+                {
                     long interval = SystemClock.elapsedRealtime() - pauseMillis;
                     startMillis += interval;
                     oldDrawMillis += interval;
