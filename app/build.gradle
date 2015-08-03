@@ -148,19 +148,9 @@ android {
     }
 }
 
-eclipse.ext {
-    genDir = new File("${projectDir}/gen")
-    assetsDir = new File("${projectDir}/assets")
-    resDir = new File("${projectDir}/res")
-    srcDir = new File("${projectDir}/src/main/java")
-}
-
 eclipse.classpath.file {
     withXml {
-        eclipse.genDir.mkdirs()
-        eclipse.assetsDir.mkdirs()
-        eclipse.resDir.mkdirs()
-        eclipse.srcDir.mkdirs()
+        
         
         def props = new Properties()
         def writer = new FileWriter(file('project.properties'))
@@ -290,6 +280,24 @@ task cleanEclipseGradle << {
     projectProps.delete()
 }
 
+task genSrcDirs << {
+    android.sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.renderscript.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.aidl.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.res.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.assets.srcDirs*.each { it.mkdirs() }
+    new File("${projectDir}/gen").mkdirs()
+}
+
+task genBaseSrcDirs << {
+    android.sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.assets.srcDirs*.each { it.mkdirs() }
+    android.sourceSets*.res.srcDirs*.each { it.mkdirs() }
+    new File("${projectDir}/gen").mkdirs()
+}
+
+tasks.eclipse.finalizedBy(genBaseSrcDirs)
 task genEclipse(dependsOn: ['eclipse', 'copyAars', 'copyEclipseClasspath'])
 copyAars.mustRunAfter tasks.eclipse
 copyEclipseClasspath.mustRunAfter copyAars
