@@ -18,14 +18,14 @@ dependencies {
 def isTravis = "true".equals(System.getenv("TRAVIS"))
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
-def getVersionCode = { ->
+def computeVersionCode = { ->
     try {
         def code = new ByteArrayOutputStream()
         exec {
-            commandLine 'git', 'tag', '--list'
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'HEAD'
             standardOutput = code
         }
-        return code.toString().split("\n").size()
+        return Integer.parseInt(code.toString().trim())
     }
     catch (ignored) {
         return -1;
@@ -53,8 +53,8 @@ android {
         applicationId Package
         minSdkVersion MinSDK
         targetSdkVersion TargetSDK
-        versionCode getVersionCode()
         versionName getVersionName()
+        versionCode computeVersionCode()
     }
     
     
