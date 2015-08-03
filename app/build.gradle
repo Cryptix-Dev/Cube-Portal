@@ -71,6 +71,12 @@ def computeVersionName = { ->
     }
 }
 
+task('compute') <<
+{
+    println computeVersionCode()
+    println computeVersionName()
+}
+
 android {
     compileSdkVersion TargetSDK
     buildToolsVersion BuildTools
