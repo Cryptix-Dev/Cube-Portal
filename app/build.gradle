@@ -163,10 +163,32 @@ eclipse.classpath.file {
         }
     
         def node = it.asNode()
-        node.appendNode('classpathentry kind="src" path="src/main/java"')
+        def subLength = projectDir.toString().length() + 1   
+        android.sourceSets*.java.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
+        android.sourceSets*.res.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
+        android.sourceSets*.assets.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
+        android.sourceSets*.aidl.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
+        android.sourceSets*.resources.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
+        android.sourceSets*.renderscript.srcDirs*.each {
+            def path = it.getPath().substring(subLength, it.getPath().length()).replaceAll("\\\\", "/")
+            node.appendNode("classpathentry kind=\"src\" path=\"${path}\"")
+        }
         node.appendNode('classpathentry kind="src" path="gen"')
-        node.appendNode('classpathentry kind="src" path="res"')
-        node.appendNode('classpathentry kind="src" path="assets"')
         
         node.children().removeAll() { c ->
             def path = c.attribute('path')
