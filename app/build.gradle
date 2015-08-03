@@ -31,7 +31,7 @@ def computeVersionCode = { ->
         return -1;
     }
 }
-def computeVersionName = { ->
+def computeGitVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
         def builder = StringBuilder.newInstance()
@@ -74,7 +74,7 @@ def computeVersionName = { ->
 task('compute') <<
 {
     println computeVersionCode()
-    println computeVersionName()
+    println computeGitVersionName()
 }
 
 android {
@@ -86,7 +86,7 @@ android {
         minSdkVersion MinSDK
         targetSdkVersion TargetSDK
         versionCode computeVersionCode()
-        versionName computeVersionName()
+        versionName computeGitVersionName()
     }
     
     
