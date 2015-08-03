@@ -115,31 +115,31 @@ android {
     
     // Source Sets for Eclipse
     sourceSets {
-    	main {
-    		manifest.srcFile 'AndroidManifest.xml'
-    		java.srcDirs = ['src/main/java']
-    		resources.srcDirs = ['src/main/java']
-    		aidl.srcDirs = ['src/main/java']
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
             renderscript.srcDirs = ['src/main/java']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-    	}
-    	
-    	androidTest.setRoot('tests')
+        }
+        
+        androidTest.setRoot('tests')
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
     
     dexOptions {
-    	preDexLibraries = preDexEnabled && !isTravis
+        preDexLibraries = preDexEnabled && !isTravis
     }
     
     compileOptions {
-    	sourceCompatibility JavaVersion.VERSION_1_7
-    	targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     
-	// TODO: Create more buildTypes
+    // TODO: Create more buildTypes
     buildTypes {
         release {
             minifyEnabled false
@@ -149,49 +149,49 @@ android {
 }
 
 eclipse.ext {
-	genDir = new File("${projectDir}/gen")
-	assetsDir = new File("${projectDir}/assets")
-	resDir = new File("${projectDir}/res")
-	srcDir = new File("${projectDir}/src/main/java")
+    genDir = new File("${projectDir}/gen")
+    assetsDir = new File("${projectDir}/assets")
+    resDir = new File("${projectDir}/res")
+    srcDir = new File("${projectDir}/src/main/java")
 }
 
 eclipse.classpath.file {
-	withXml {
-		eclipse.genDir.mkdirs()
-		eclipse.assetsDir.mkdirs()
-		eclipse.resDir.mkdirs()
-		eclipse.srcDir.mkdirs()
-		
-		def props = new Properties()
-		def writer = new FileWriter(file('project.properties'))
-		try {
-			props.setProperty("target", "android-${TargetSDK}")
-			props.setProperty("sdk.buildtools", "${BuildTools}")
-			props.store(writer, null)
-			writer.flush()
-		} finally {
-			writer.close()
-		}
-	
-		def node = it.asNode()
-		node.appendNode('classpathentry kind="src" path="src/main/java"')
-		node.appendNode('classpathentry kind="src" path="gen"')
-		node.appendNode('classpathentry kind="src" path="res"')
-		node.appendNode('classpathentry kind="src" path="assets"')
-		
-		node.children().removeAll() { c ->
-			def path = c.attribute('path')
-			path != null && (
-					path.contains('/com.android.support/support-v4')
-					)
-		}
-	}
-	
-	beforeMerged { classpath ->
-		classpath.entries.removeAll() { c ->
-			c.kind == 'src'
-		}
-	}
+    withXml {
+        eclipse.genDir.mkdirs()
+        eclipse.assetsDir.mkdirs()
+        eclipse.resDir.mkdirs()
+        eclipse.srcDir.mkdirs()
+        
+        def props = new Properties()
+        def writer = new FileWriter(file('project.properties'))
+        try {
+            props.setProperty("target", "android-${TargetSDK}")
+            props.setProperty("sdk.buildtools", "${BuildTools}")
+            props.store(writer, null)
+            writer.flush()
+        } finally {
+            writer.close()
+        }
+    
+        def node = it.asNode()
+        node.appendNode('classpathentry kind="src" path="src/main/java"')
+        node.appendNode('classpathentry kind="src" path="gen"')
+        node.appendNode('classpathentry kind="src" path="res"')
+        node.appendNode('classpathentry kind="src" path="assets"')
+        
+        node.children().removeAll() { c ->
+            def path = c.attribute('path')
+            path != null && (
+                    path.contains('/com.android.support/support-v4')
+                    )
+        }
+    }
+    
+    beforeMerged { classpath ->
+        classpath.entries.removeAll() { c ->
+            c.kind == 'src'
+        }
+    }
 }
 
 eclipse.jdt {
@@ -200,8 +200,8 @@ eclipse.jdt {
 }
 
 eclipse.project {
-	name = "${projectName}-${project.name}"
-	natures 'com.android.ide.eclipse.adt.AndroidNature'
+    name = "${projectName}-${project.name}"
+    natures 'com.android.ide.eclipse.adt.AndroidNature'
     buildCommand 'com.android.ide.eclipse.adt.ResourceManagerBuilder'
     buildCommand 'com.android.ide.eclipse.adt.PreCompilerBuilder'
     buildCommand 'com.android.ide.eclipse.adt.ApkBuilder'
@@ -209,20 +209,20 @@ eclipse.project {
 
 task copyAars << {
     configurations.compile.filter { it.name.endsWith 'aar' }.each { File file -> copyAndRenameAar(file) }
-	def aarsFolder = new File("${projectDir}/deps/aars/exploded")
-	if (aarsFolder.exists()) {
-		Properties props = new Properties()
-		def propsFile = new File("${projectDir}/project.properties")
-		props.load(propsFile.newDataInputStream())
-		
-		int count = 1
-		aarsFolder.eachDir() { dir ->
-			def parts = dir.getPath().split("\\\\")
-			props.setProperty("android.library.reference.${count}", "deps/aars/exploded/${parts[parts.size() -1]}")
-			count++
-		}
-		props.store(propsFile.newWriter(), null)
-	}
+    def aarsFolder = new File("${projectDir}/deps/aars/exploded")
+    if (aarsFolder.exists()) {
+        Properties props = new Properties()
+        def propsFile = new File("${projectDir}/project.properties")
+        props.load(propsFile.newDataInputStream())
+        
+        int count = 1
+        aarsFolder.eachDir() { dir ->
+            def parts = dir.getPath().split("\\\\")
+            props.setProperty("android.library.reference.${count}", "deps/aars/exploded/${parts[parts.size() -1]}")
+            count++
+        }
+        props.store(propsFile.newWriter(), null)
+    }
 }
 
 void copyAndRenameAar(File file) {
@@ -271,23 +271,23 @@ task copyEclipseClasspath << {
 }
 
 task refreshBuild << {
-	Properties props = new Properties()
-	def propsFile = new File("${projectDir}/project.properties")
-	props.load(propsFile.newDataInputStream())
-	props.setProperty("target", "android-${TargetSDK}")
-	props.setProperty("sdk.buildtools", "${BuildTools}")
-	props.store(propsFile.newWriter(), null)
+    Properties props = new Properties()
+    def propsFile = new File("${projectDir}/project.properties")
+    props.load(propsFile.newDataInputStream())
+    props.setProperty("target", "android-${TargetSDK}")
+    props.setProperty("sdk.buildtools", "${BuildTools}")
+    props.store(propsFile.newWriter(), null)
 }
 
 task cleanEclipseGradle << {
-	def binsDir = new File("${projectDir}/bin")
-	def depsDir = new File("${projectDir}/deps")
-	def genDir  = new File("${projectDir}/gen")
-	def projectProps = new File("${projectDir}/project.properties")
-	binsDir.deleteDir()
-	depsDir.deleteDir()
-	genDir.deleteDir()
-	projectProps.delete()
+    def binsDir = new File("${projectDir}/bin")
+    def depsDir = new File("${projectDir}/deps")
+    def genDir  = new File("${projectDir}/gen")
+    def projectProps = new File("${projectDir}/project.properties")
+    binsDir.deleteDir()
+    depsDir.deleteDir()
+    genDir.deleteDir()
+    projectProps.delete()
 }
 
 task genEclipse(dependsOn: ['eclipse', 'copyAars', 'copyEclipseClasspath'])
