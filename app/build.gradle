@@ -70,11 +70,37 @@ def computeGitVersionName = { ->
         return null;
     }
 }
+def computeSemanticVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        def builder = new String()
+        exec {
+            commandLine 'git', 'describe', '--always', '--tags', '--dirty'
+            standardOutput = stdout
+        }
+        
+        if (stdout.toString().contains('.')) {
+            def describeTags = stdout.toString().trim().split('-')
+            builder = "${describeTags[0]}-${describeTags[2].substring(1, describeTags[2].length())}"
+            if (describeTags.size() == 4) {
+                builder = "${builder}-dirty"
+            }
+        } else {
+            builder = stdout.toString().trim()
+        }
+        return builder
+    }
+    catch (ignored) {
+        return null;
+    }
+}
+
 
 task('compute') <<
 {
     println computeVersionCode()
     println computeGitVersionName()
+    println computeSemanticVersionName()
 }
 
 android {
