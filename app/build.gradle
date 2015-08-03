@@ -320,6 +320,8 @@ task genBaseSrcDirs << {
 
 tasks.eclipse.finalizedBy(genBaseSrcDirs)
 task genEclipse(dependsOn: ['eclipse', 'copyAars', 'copyEclipseClasspath'])
+tasks.eclipse.finalizedBy(copyAars)
+copyAars.finalizedBy(copyEclipseClasspath)
 copyAars.mustRunAfter tasks.eclipse
 copyEclipseClasspath.mustRunAfter copyAars
 cleanEclipse.dependsOn cleanEclipseGradle
