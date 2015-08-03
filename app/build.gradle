@@ -31,14 +31,40 @@ def computeVersionCode = { ->
         return -1;
     }
 }
-def getVersionName = { ->
+def computeVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
+        def builder = StringBuilder.newInstance()
         exec {
-            commandLine 'git', 'describe', '--tags', '--dirty'
+            commandLine 'git', 'describe', '--always', '--tags', '--dirty'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+        
+        if (stdout.toString().trim().contains('.')) {
+            def describeTags = stdout.toString().trim().split('-')
+            builder << stdout.toString().split('-')[0].trim()
+            stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-list', '--tags', '--no-walk', '--max-count=1'
+                standardOutput = stdout
+            }
+            def distance = stdout.toString().trim() + '..HEAD'
+            stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-list', distance, '--count'
+                standardOutput = stdout
+            }
+            builder << '.'
+            builder << stdout.toString().trim()
+            builder << '-'
+            builder << describeTags[2].trim()
+            if (describeTags.size() == 4) {
+                builder << '-dirty'
+            }
+        } else {
+            builder << stdout.toString().trim()
+        }
+        return builder.toString()
     }
     catch (ignored) {
         return null;
@@ -53,8 +79,8 @@ android {
         applicationId Package
         minSdkVersion MinSDK
         targetSdkVersion TargetSDK
-        versionName getVersionName()
         versionCode computeVersionCode()
+        versionName computeVersionName()
     }
     
     
