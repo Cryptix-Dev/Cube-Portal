@@ -93,8 +93,7 @@ def computeSemanticVersionName = { ->
 }
 
 
-task('compute') <<
-{
+task compute << {
     println computeVersionCode()
     println computeGitVersionName()
     println computeSemanticVersionName()
